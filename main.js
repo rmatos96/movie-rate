@@ -16,17 +16,17 @@ const getTopRatedMovies = async (url) => {
     setTopMovies.push(...data.results)
 
     console.log('oi');
-    console.log("🚀 ~ getTopRatedMovies ~ setTopMovies:", setTopMovies)
 
     document.querySelector('#movieLib').innerHTML = `
         ${setTopMovies.map((movie) => {
-            window.handleMovie = function () {
+            window.handleMovie = async function (movieId) {
                 const getMovieUrl = async function(url) {
                     const res = await fetch(url)
                     const data = await res.json()
                 
                     const setTopMovies = []
                     setTopMovies.push(data)
+                    
 
                     
                     document.querySelector('#modalMovie').innerHTML = `
@@ -59,10 +59,11 @@ const getTopRatedMovies = async (url) => {
                   </div>
                     `     
                     console.log('chegou');
+                    console.log(setTopMovies);
                 }
                 
-                const movieUrl = `${moviesURL}${movie.id}?${apiKey}`
-                getMovieUrl(movieUrl) 
+                const movieUrl = `${moviesURL}${movieId}?${apiKey}`
+                await getMovieUrl(movieUrl) 
                 
                 new bootstrap.Modal('#exampleModal1').show()
 
@@ -96,7 +97,7 @@ addEventListener('keypress', function(e) {
     }
 })
 
-window.handleSubmit = function() {
+async function handleSubmit() {
     
     const getSearchMovies = async(url) => {
         const res = await fetch(url)
@@ -104,6 +105,7 @@ window.handleSubmit = function() {
 
         const setTopMovies = []
         setTopMovies.push(...data.results)
+        
 
 
         document.querySelector('#modal').innerHTML = `
@@ -116,8 +118,7 @@ window.handleSubmit = function() {
             </div>
             <div class="modal-body">
                  ${setTopMovies.map((movie) => {
-                    return (
-                        `<div class="text-[#fff] mb-10 flex flex-col justify-between bg-[#111] p-4">
+                    `<div class="text-[#fff] mb-10 flex flex-col justify-between bg-[#111] p-4">
                             <img class="mb-4" src='${imageUrl + movie.poster_path}' alt="${movie.title}">
                             
                             <h2 class="mb-4 font-bold text-2xl">${movie.title}</h2>
@@ -130,7 +131,6 @@ window.handleSubmit = function() {
                                 <button  class="bg-#f7d354 border-#f7d354 border-4 rounded-md text-#121212 p-1 flex items-center cursor-pointer transition duration-500 hover:opacity-40 w-full justify-center font-bold text-base" >Detalhes</button>
                             </a>
                         </div> `
-                    )
                  })}
             </div>
             <div class="modal-footer">
@@ -143,7 +143,7 @@ window.handleSubmit = function() {
     }
     const searchQueryUrl = `${searchUrl}?${apiKey}&query=${input.value}`
     
-    getSearchMovies(searchQueryUrl)
+    await getSearchMovies(searchQueryUrl)
     new bootstrap.Modal('#exampleModal').show()
     input.value = ''
     
