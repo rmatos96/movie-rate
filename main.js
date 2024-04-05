@@ -97,6 +97,54 @@ addEventListener('keypress', function(e) {
 })
 
 window.handleSubmit = async function() {
+
+    window.handleSearchMovie = async function (movieId) {
+        const getMovieUrl = async function(url) {
+            const res = await fetch(url)
+            const data = await res.json()
+        
+            const setTopMovies = []
+            setTopMovies.push(data)
+            
+
+            
+            document.querySelector('#modalSearchMovie').innerHTML = `
+            <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog ">
+              <div class="modal-content bg-#121212 ">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel"> </h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                     ${setTopMovies.map((movie) => {
+                        return (
+                            `<div class="text-[#fff] mb-10 flex flex-col justify-between bg-[#111] p-4">
+                                <img class="mb-4" src='${imageUrl + movie.poster_path}' alt="${movie.title}">
+                                <h2 class="mb-4 font-bold text-2xl">${movie.title}
+                                </h2>
+                                <p class="">
+                                    Nota <span>${movie.vote_average}</span>
+                                </p>
+        
+                            </div> `
+                        )
+                        
+                     })}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+            `     
+        }
+        
+        const movieUrl = `${moviesURL}${movieId}?${apiKey}`
+        await getMovieUrl(movieUrl) 
+        
+        new bootstrap.Modal('#exampleModal2').show()
+
+    }
     
     const getSearchMovies = async(url) => {
         const res = await fetch(url)
@@ -127,9 +175,9 @@ window.handleSubmit = async function() {
                         Nota <span>${movie.vote_average}</span>
                     </p>
 
-                    <a  href="">
+                    <button  href="">
                         <button onclick="handleSearchMovie(${movie.id})" class="bg-#f7d354 border-#f7d354 border-4 rounded-md text-#121212 p-1 flex items-center cursor-pointer transition duration-500 hover:opacity-40 w-full justify-center font-bold text-base" >Detalhes</button>
-                    </a>
+                    </button>
                 </div> `
                 )    
                  })}
