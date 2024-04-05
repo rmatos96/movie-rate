@@ -19,6 +19,7 @@ const getTopRatedMovies = async (url) => {
 
     document.querySelector('#movieLib').innerHTML = `
         ${setTopMovies.map((movie) => {
+            
             window.handleMovie = async function (movieId) {
                 const getMovieUrl = async function(url) {
                     const res = await fetch(url)
@@ -58,8 +59,6 @@ const getTopRatedMovies = async (url) => {
                     </div>
                   </div>
                     `     
-                    console.log('chegou');
-                    console.log(setTopMovies);
                 }
                 
                 const movieUrl = `${moviesURL}${movieId}?${apiKey}`
@@ -97,7 +96,7 @@ addEventListener('keypress', function(e) {
     }
 })
 
-async function handleSubmit() {
+window.handleSubmit = async function() {
     
     const getSearchMovies = async(url) => {
         const res = await fetch(url)
@@ -118,19 +117,21 @@ async function handleSubmit() {
             </div>
             <div class="modal-body">
                  ${setTopMovies.map((movie) => {
-                    `<div class="text-[#fff] mb-10 flex flex-col justify-between bg-[#111] p-4">
-                            <img class="mb-4" src='${imageUrl + movie.poster_path}' alt="${movie.title}">
-                            
-                            <h2 class="mb-4 font-bold text-2xl">${movie.title}</h2>
+                    return(
+                        `<div class="text-[#fff] mb-10 flex flex-col justify-between bg-[#111] p-4">
+                    <img class="mb-4" src='${imageUrl + movie.poster_path}' alt="${movie.title}">
+                    
+                    <h2 class="mb-4 font-bold text-2xl">${movie.title}</h2>
 
-                            <p class="mb-4">
-                                Nota <span>${movie.vote_average}</span>
-                            </p>
+                    <p class="mb-4">
+                        Nota <span>${movie.vote_average}</span>
+                    </p>
 
-                            <a  href="">
-                                <button  class="bg-#f7d354 border-#f7d354 border-4 rounded-md text-#121212 p-1 flex items-center cursor-pointer transition duration-500 hover:opacity-40 w-full justify-center font-bold text-base" >Detalhes</button>
-                            </a>
-                        </div> `
+                    <a  href="">
+                        <button onclick="handleSearchMovie(${movie.id})" class="bg-#f7d354 border-#f7d354 border-4 rounded-md text-#121212 p-1 flex items-center cursor-pointer transition duration-500 hover:opacity-40 w-full justify-center font-bold text-base" >Detalhes</button>
+                    </a>
+                </div> `
+                )    
                  })}
             </div>
             <div class="modal-footer">
